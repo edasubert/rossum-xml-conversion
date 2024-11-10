@@ -20,8 +20,7 @@ pycountry = "^24.6.1"
 pytest = "^8.3.3"
 coverage = "^7.6.4"
 
-
-[tool.poetry.group.conventions.dependencies]
+[tool.poetry.group.dev.dependencies]
 black = "^24.10.0"
 isort = "^5.13.2"
 mypy = "^1.13.0"
@@ -29,3 +28,18 @@ mypy = "^1.13.0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.mypy]
+python_version = "3.12"
+warn_return_any = true
+warn_unused_configs = true
+plugins = [
+  "pydantic.mypy"
+]
+
+[tool.black]
+line-length = 88
+target-version = ['py312']
+
+[tool.isort]
+profile = "black"

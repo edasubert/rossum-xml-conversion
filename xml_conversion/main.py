@@ -1,16 +1,18 @@
 import base64
 import logging
 import secrets
-import httpx
 from typing import Annotated
+
+import httpx
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
+
 from xml_conversion.settings import settings
 from xml_conversion.xml_utils import convert_rossum_content
 
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
+    format="%(asctime)s - %(levelname)s - %(message)s",
 )
 logger = logging.getLogger(__name__)
 
