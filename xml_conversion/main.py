@@ -62,8 +62,15 @@ async def export(
         queue_id=queue_id, annotation_id=annotation_id
     )
 
-    async with httpx.AsyncClient() as client:
-        response = await client.get(url, headers=headers)
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.get(url, headers=headers)
+    except (httpx.HTTPError, httpx.InvalidURL) as e:
+        logger.info(
+            "Rossum API request failed: %s",
+            e,
+        )
+        return success(False)
 
     if response.status_code != httpx.codes.OK:  # TODO: suggest retry
         logger.info(
@@ -74,19 +81,31 @@ async def export(
         )
         return success(False)
 
-    rossum_content = response.text
-
     # reformat the content
-    simplified_content = convert_rossum_content(rossum_content)
+    try:
+        formatted_content = convert_rossum_content(response.text)
+    except ValueError as e:
+        logger.info(
+            "Content conversion failed: %s",
+            e,
+        )
+        return success(False)
 
     payload = {
         "annotationId": annotation_id,
-        "content": base64.b64encode(bytes(simplified_content, "utf-8")).decode("utf-8"),
+        "content": base64.b64encode(bytes(formatted_content, "utf-8")).decode("utf-8"),
     }
 
     # post to postbin
-    async with httpx.AsyncClient() as client:
-        response = await client.post(settings.postbin_url, json=payload)
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.post(settings.postbin_url, json=payload)
+    except (httpx.HTTPError, httpx.InvalidURL) as e:
+        logger.info(
+            "Postbin request failed: %s",
+            e,
+        )
+        return success(False)
 
     if response.status_code != httpx.codes.OK:
         logger.info(

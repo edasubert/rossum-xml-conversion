@@ -103,5 +103,9 @@ def build_xml(document: Document, details: list[Detail]) -> str:
 
 
 def convert_rossum_content(text: str) -> str:
-    document, details = parse_rossum_xml(text)
+    try:
+        document, details = parse_rossum_xml(text)
+    except ET.ParseError as e:
+        raise ValueError from e
+
     return build_xml(document, details)
