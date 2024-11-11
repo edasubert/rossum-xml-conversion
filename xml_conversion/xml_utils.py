@@ -10,7 +10,8 @@ def clean_whitespace(string: str) -> str:
     return " ".join(string.split()).strip()
 
 
-class UpperCurrency(PydanticCurrency):  # TODO: add link to the MR
+# remove UpperCurrency, once this is merged: https://github.com/pydantic/pydantic-extra-types/pull/236
+class UpperCurrency(PydanticCurrency):
     @classmethod
     def _validate(cls, currency_symbol: str, info) -> str:
         return super()._validate(currency_symbol.upper(), info)

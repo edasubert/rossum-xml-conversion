@@ -20,6 +20,7 @@ pycountry = "^24.6.1"
 pytest = "^8.3.3"
 coverage = "^7.6.4"
 pytest-httpx = "^0.33.0"
+pytest-cov = "^6.0.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.10.0"
