@@ -18,14 +18,19 @@ Then build and run the application using docker:
 docker build -t xml_conversion .
 docker run -it --name xml_conversion -p 8000:80 --env-file .env  xml_conversion
 ```
+## Testing and Conventions
+To run testing and conventions through poetry, install it first:
+```
+poetry install
+```
 
-## Testing
-Tests are set up using poetry and pytest with coverage:
+### Testing
+Tests are set up using pytest with coverage:
 ```
 poetry run pytest --cov=xml_conversion --cov-report=term-missing tests
 ```
 
-## Conventions
+### Conventions
 Several conventions are followed, namely black formatting, isort import sorting and mypy:
 ```
 poetry run black --check xml_conversion tests 
