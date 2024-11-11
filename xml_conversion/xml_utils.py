@@ -5,18 +5,6 @@ from typing import Optional
 from pydantic import BaseModel, PositiveInt
 from pydantic_extra_types.currency_code import Currency as PydanticCurrency
 
-
-def clean_whitespace(string: str) -> str:
-    return " ".join(string.split()).strip()
-
-
-# remove UpperCurrency, once this is merged: https://github.com/pydantic/pydantic-extra-types/pull/236
-class UpperCurrency(PydanticCurrency):
-    @classmethod
-    def _validate(cls, currency_symbol: str, info) -> str:
-        return super()._validate(currency_symbol.upper(), info)
-
-
 DETAIL_SCHEMA_ID_2_TAG = {
     "item_description": "Notes",
     "item_quantity": "Quantity",
@@ -44,6 +32,13 @@ DOCUMENT_SCHEMA_ID_2_TAG = {
 }
 
 
+# remove UpperCurrency, once this is merged: https://github.com/pydantic/pydantic-extra-types/pull/236
+class UpperCurrency(PydanticCurrency):
+    @classmethod
+    def _validate(cls, currency_symbol: str, info) -> str:
+        return super()._validate(currency_symbol.upper(), info)
+
+
 class Document(BaseModel):
     InvoiceNumber: Optional[PositiveInt] = None
     InvoiceDate: Optional[datetime] = None
@@ -55,6 +50,10 @@ class Document(BaseModel):
     Currency: Optional[UpperCurrency] = None
     Vendor: Optional[str] = None
     VendorAddress: Optional[str] = None
+
+
+def clean_whitespace(string: str) -> str:
+    return " ".join(string.split()).strip()
 
 
 def parse_rossum_xml(text: str) -> tuple[Document, list[Detail]]:
